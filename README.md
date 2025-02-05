@@ -8,11 +8,14 @@
     - First homework assignment. Contains the following files:
         - .py files:
             - echo.py - Contains first method described in homework.
-            - fib.py - Contains the specified recursive definition of computing nth fibonacci number, and three decorators. 
+            ![alt text](assignmentOne_PythonRefresher/echo.png)
+            - fib.py - Contains the specified recursive definition of computing nth fibonacci number, and three decorators.
+             ![alt text](assignmentOne_PythonRefresher/fib.png)
                 1. @lru_cache:The lru_cache decorator from the functools module is used to cache the results of the function it decorates.
                 2. @timer:The timer decorator measures and prints the execution time of the function it decorates. It wraps the function call, records the start and end times, calculates the time difference, and prints the result along with the execution time.
                 3. @time_logger:The time_logger decorator logs the execution time of the function it decorates to a CSV file. It creates a CSV file with the function's name followed by TimeLog.csv, writes the headers, and appends the input arguments and execution time for each function call. This is used to plot the image
             - executionPlot.py - Contains the simple pyplot commands to generate a plot of the execution time of the nth fibonacci sequence. 
+            ![alt text](assignmentOne_PythonRefresher/executionPlot.png)
         - .csv file: 
             - The fibTimeLog.csv file is the logged execution time that is generated each time a function is run using the time_logger decorator. It is dynamically named based on the function it wraps. 
         - .png file: 
