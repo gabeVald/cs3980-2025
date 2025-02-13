@@ -13,7 +13,7 @@ app = FastAPI()
 
 @app.get("/")
 async def welcome() -> dict:
-    return {"msg": "Hello World!"}
+    return {"msg": "Hello good World!"}
 
 
 @app.get("/chatbot")
