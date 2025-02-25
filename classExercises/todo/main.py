@@ -1,8 +1,9 @@
-from fastapi import FastAPI, APIRouter
+from typing import Annotated
+from fastapi import FastAPI, APIRouter, Path
 from enum import Enum
-from todo import todo_router
+from todo_routes import todo_router
 
-app = FastAPI()
+app = FastAPI(Title="My todo App")
 
 app.include_router(todo_router, tags=["todos"], prefix="/todos")
 
@@ -10,7 +11,7 @@ app.include_router(todo_router, tags=["todos"], prefix="/todos")
 @app.get("/")
 async def welcome() -> dict:
     """My document summary"""
-    return {"msg": "Hello good World!"}
+    return {"msg": "Hello"}
 
 
 @app.get("/items")
@@ -19,8 +20,17 @@ async def get_items() -> dict:
     return {"item_1": "book_1"}
 
 
-@app.get("/items/{item_id}")
-async def get_items(item_id: int) -> dict:
+@app.get(
+    "/items/{item_id}",
+    summary="Get an item",
+    description="## This is the lalalalal description of the route",
+)
+async def get_items(
+    item_id: Annotated[
+        int,
+        Path(title="This is the item ID, which should be an integer", ge=0, le=1000),
+    ]
+) -> dict:
     """My document summary"""
     if item_id == 1:
         return {"item_1": "book_1"}
