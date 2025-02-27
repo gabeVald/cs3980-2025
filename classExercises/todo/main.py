@@ -1,22 +1,30 @@
 from typing import Annotated
 from fastapi import FastAPI, APIRouter, Path
 from enum import Enum
+
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from todo_routes import todo_router
 
 app = FastAPI(Title="My todo App")
 
-app.include_router(todo_router, tags=["todos"], prefix="/todos")
+app.include_router(todo_router, tags=["Todos"], prefix="/todos")
 
 
 @app.get("/")
 async def welcome() -> dict:
     """My document summary"""
-    return {"msg": "Hello"}
+    return FileResponse("./frontend/index.html")
 
+
+app.mount("/", StaticFiles(directory="frontend"), name="assets")
+
+# BELOW THIS IS FROM EARLY DEMOS, COMMENTED OUT
+"""
 
 @app.get("/items")
 async def get_items() -> dict:
-    """My document summary"""
+    #
     return {"item_1": "book_1"}
 
 
@@ -31,7 +39,7 @@ async def get_items(
         Path(title="This is the item ID, which should be an integer", ge=0, le=1000),
     ]
 ) -> dict:
-    """My document summary"""
+    
     if item_id == 1:
         return {"item_1": "book_1"}
     else:
@@ -46,7 +54,7 @@ class PersonType(str, Enum):
 
 @app.get("/persons/{person_type}")
 async def get_person_with_type(person_type: PersonType) -> dict:
-    """My document summary"""
+    
     # Type checking using is
     if person_type is PersonType.student:
         return {"item_1": "book_1"}
@@ -59,3 +67,4 @@ async def get_person_with_type(person_type: PersonType) -> dict:
         return {"item_1": "p1 t1"}
     else:
         return {}
+"""

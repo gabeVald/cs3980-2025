@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from todo_routes import todo_router
+
+# from todo_routes import todo_router
 
 
 class Todo(BaseModel):
@@ -10,6 +11,8 @@ class Todo(BaseModel):
 
 todo_list = []
 
+# FROM EARLIER DEMOS
+"""
 
 # GET
 @todo_router.get("")
@@ -22,3 +25,4 @@ async def get_todos() -> dict:
 async def add_todo(todo: Todo) -> dict:
     todo_list.append(todo)
     return {"msg": "todo created"}
+"""
