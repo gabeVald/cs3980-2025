@@ -1,0 +1,41 @@
+:root {
+    --accent-green: #2D6A4F; /* Rich green accent color */
+}
+
+body {
+    background-color: #EAF4F4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--accent-green);
+    margin: 1em 0;
+    text-align: center;
+}
+
+p {
+    line-height: 1.6;
+    margin: 0 0 1em;
+}
+
+a {
+    color: var(--accent-green);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.button {
+    background-color: var(--accent-green);
+    color: #fff;
+    padding: 0.5em 1.2em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
