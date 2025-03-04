@@ -7,9 +7,10 @@ levels = ["task", "todo", "gottado"]
 
 class Task(BaseModel):
     id: int
-    description = str
+    description: str
     title: str = "New Task"
     tags: list[str] = []
+    completed: bool = False
     created_date: datetime  # When the task was initially created
     expired_date: (
         datetime  # When the task moves up to the next level (task -> todo -> gottado)
