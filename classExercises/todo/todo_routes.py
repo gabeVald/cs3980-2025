@@ -1,7 +1,8 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Path, status
-from todo import Todo
+from todo import Todo, TodoRequest
 
+max_id: int = 0
 
 todo_router = APIRouter()
 
@@ -9,18 +10,23 @@ todo_list = []
 
 
 @todo_router.get("")
-async def get_todos() -> dict:
-    return {"todos": todo_list}
+async def get_todos() -> list[Todo]:
+    return todo_list
 
 
+# Create new todos
 @todo_router.post("", status_code=status.HTTP_201_CREATED)
 async def add_todo(
-    todo: Todo,
-) -> (
-    Todo
-):  # Returning the Todo type that we created, which could be used to update the frontend
-    todo_list.append(todo)
-    return todo
+    todo: TodoRequest,
+) -> Todo:
+    # Returning the Todo type that we created, which could be used to update the frontend
+    global max_id
+    max_id += 1  # Auto increment
+    newTodo = Todo(
+        id=max_id, title=todo.title, desc=todo.desc
+    )  # construct regular Todo from the todoRequest
+    todo_list.append(newTodo)
+    return newTodo
 
 
 @todo_router.get("/{id}")

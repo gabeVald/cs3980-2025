@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 from fastapi import APIRouter, Body, HTTPException, Path, status
 from GottaDo import Task
@@ -104,7 +105,7 @@ async def delete_task_by_id(id: Annotated[int, Path(ge=0, le=99999)]) -> dict:
 
 # PATCH
 # Update title
-@task_update_router.patch("/title/{id}", status_code=status.HTTP_200_OK)
+@task_update_router.patch("/title/{id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_task_title(
     id: Annotated[int, Path(ge=0, le=99999)],
     title: Annotated[str, Body(..., min_length=3, max_length=50)],
@@ -122,7 +123,7 @@ async def update_task_title(
 
 
 # Update description
-@task_update_router.patch("/desc/{id}", status_code=status.HTTP_200_OK)
+@task_update_router.patch("/desc/{id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_task_desc(
     id: Annotated[int, Path(ge=0, le=99999)],
     desc: Annotated[str, Body(..., min_length=0, max_length=1000000)],
@@ -137,3 +138,7 @@ async def update_task_desc(
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID={id} not found"
     )
+
+@task_update_router.patch("/due/{id}", status_code=status.HTTP_202_ACCEPTED)
+async def update_task_duedate(id: Annotated[int, Path(ge=0, le=99999)], duedate: Annotated[datetime, Body(description="The updated duedate, in datetime format",example="2023-01-01T00:00:00Z")]) -> datetime:
+    
