@@ -1,9 +1,14 @@
 const api = `http://localhost:8000/tasks`;
 
 const displayAll = (all) => {
+    console.log('Display All called with:', all); // Debug log
+
     const tasks = all.all_items.task.map(task => task);
     const todos = all.all_items.todo.map(todo => todo);
     const gottados = all.all_items.gottado.map(gottado => gottado);
+    
+    console.log('Parsed arrays:', { tasks, todos, gottados }); // Debug log
+
     //task logic
     const task_accordion = document.getElementById("task-accordion");
     task_accordion.innerHTML = ''
@@ -80,6 +85,4 @@ const getAll = () => {
 
 (() => {
     getAll();
-
-    
 })();
