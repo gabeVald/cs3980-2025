@@ -1,0 +1,9 @@
+1. Drag and Drop list interface (later)
+    - https://codepen.io/asakasinsky/pen/zqpawR
+
+2. Accordion (current solution)
+    - https://getbootstrap.com/docs/5.3/components/accordion/
+
+3. Popovers for metadata 
+    - https://getbootstrap.com/docs/5.3/components/popovers/
+
