@@ -27,17 +27,18 @@ const displayAll = (all) => {
     todo_accordion.innerHTML = ''
     const todo_items = todos.map((x) => {
         return `<div class="accordion-item">
-                  <h2 class="accordion-header" id="heading${x.id}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${x.id}" aria-expanded="false" aria-controls="collapse${x.id}">
-                      ${x.title}
-                    </button>
-                  </h2>
-                  <div id="collapse${x.id}" class="accordion-collapse collapse" aria-labelledby="heading${x.id}" data-bs-parent="#task-accordion">
-                    <div class="accordion-body">
-                      ${x.description}
-                    </div>
-                  </div>
-                </div>`;
+            <h2 class="accordion-header" id="heading${x.id}">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${x.id}" aria-expanded="false" aria-controls="collapse${x.id}">
+                ${x.title}
+              </button>
+            </h2>
+            <div id="collapse${x.id}" class="accordion-collapse collapse" aria-labelledby="heading${x.id}" data-bs-parent="#todo-accordion">
+              <div class="accordion-body">
+                ${x.description}
+                <button type="button" class="btn" data-bs-toggle="popover" data-bs-title="Metadata" data-bs-content="Creation Date: ${x.created_date} \n Expiration Date: ${x.expired_date} \n Completed Date: ${x.completed_date} ">Metadata</button>
+              </div>
+            </div>
+          </div>`;
     });
     todo_accordion.innerHTML = todo_items.join(' ');
     //gottado logic
@@ -58,6 +59,9 @@ const displayAll = (all) => {
                 </div>`;
     });
     gottado_accordion.innerHTML = gottado_items.join(' ');
+
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    [...popoverTriggerList].forEach(el => new bootstrap.Popover(el));
 };
 
 const getAll = () => {
@@ -76,4 +80,6 @@ const getAll = () => {
 
 (() => {
     getAll();
+
+    
 })();
