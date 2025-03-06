@@ -1,14 +1,16 @@
 from typing import Annotated
 from fastapi import FastAPI, APIRouter, Path
 from enum import Enum
-
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from todo_routes import todo_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(Title="My todo App")
 
 app.include_router(todo_router, tags=["Todos"], prefix="/todos")
+
+app.add_middleware(CORSMiddleware)
 
 
 @app.get("/")
