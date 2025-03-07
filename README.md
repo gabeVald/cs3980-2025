@@ -29,7 +29,9 @@
     - Contains the following files:
         - HTML/JavaScript files:
             - index.html - Contains the structure for the webpage with a responsive Bootstrap layout featuring two images and a central data table.
+            - ![alt text](assignmentTwo_API_JSON_HTML_JavaScript/index.png)
             - main.js - Handles the API call to the DataUSA Census endpoint and dynamically populates the table with formatted population data.
+            - ![alt text](assignmentTwo_API_JSON_HTML_JavaScript/main.png)
         - assets folder:
             - Contains images used in the webpage layout
         - Features:
