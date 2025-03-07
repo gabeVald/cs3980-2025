@@ -24,4 +24,19 @@
             - The axes of the image are labeled, with the Y representing the execution time in seconds, and the x representing the nth fibonacci number. 
             - The graph generated here varies quite disctinctly from the graph in the assignment, and from what I can discern, this has to do with every odd numbered fibonacci number being cached via the use of the @lru_cache decorator. I was not able despite many efforts to exactly replicate the graph shown by the professor. If I omitted odd numbered fib numbers from the graph it would look extremely similar to the provided example.  
 
+- ## assignmentTwo:API_JSON_HTML_JavaScript
+    - Second homework assignment. A simple web application that displays US Census data.
+    - Contains the following files:
+        - HTML/JavaScript files:
+            - index.html - Contains the structure for the webpage with a responsive Bootstrap layout featuring two images and a central data table.
+            - main.js - Handles the API call to the DataUSA Census endpoint and dynamically populates the table with formatted population data.
+        - assets folder:
+            - Contains images used in the webpage layout
+        - Features:
+            - Fetches and displays US population data from 2013-2022
+            - Numbers formatted with thousands separators for readability
+            - Responsive Bootstrap layout with bordered table and images
+            - Data sorted chronologically from oldest to newest
+        ![alt text](assignmentTwo_API_JSON_HTML_JavaScript/screenshot.png)
+
 
