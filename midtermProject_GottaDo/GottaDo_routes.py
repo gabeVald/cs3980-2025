@@ -145,7 +145,7 @@ async def update_task_desc(
         for i in range(len(all_dict[f"{type}"])):
             task = all_dict[type][i]
             if task.id == id:
-                task.desc = desc
+                task.description = desc
                 return task
 
     raise HTTPException(
