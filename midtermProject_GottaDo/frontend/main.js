@@ -1,12 +1,25 @@
 const api = `http://127.0.0.1:8000/tasks`;
 
 document.getElementById("save").addEventListener("click", (e) => {
-        console.log("button pressed");
-        e.preventDefault();
-        postTodo();
-        const closeBtn = document.getElementById("modal-close");
-        closeBtn.click();
-    });
+    console.log("button pressed");
+    e.preventDefault();
+    postTodo();
+    const closeBtn = document.getElementById("modal-close");
+    closeBtn.click();
+});
+
+const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
+const appendAlert = (message, type) => {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+    ].join("");
+
+    alertPlaceholder.append(wrapper);
+};
 
 const deleteItem = (id) => {
     console.log(`Deleting item with ID: ${id}`);
@@ -15,47 +28,48 @@ const deleteItem = (id) => {
         if (xhr.readyState == 4 && xhr.status == 200) {
             //Re-display:
             getAll();
+            appendAlert(`Deleted Item with ID: ${id}`, "success");
         }
     };
     xhr.open("DELETE", `${api}/${id}`, true);
     xhr.send();
 };
 
-
 const togglePriority = (id) => {
-	console.log(`Updating priority of item with id: ${id}`);
-	const xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = () => {
-		if (xhr.readyState == 4 && xhr.status == 200) {
-			getAll();
-		}
-	}
-	xhr.open("PATCH", `${api}/high_priority/${id}`, true);
-	xhr.send();
-	getAll();
-}
+    console.log(`Updating priority of item with id: ${id}`);
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            getAll();
+        }
+    };
+    xhr.open("PATCH", `${api}/high_priority/${id}`, true);
+    xhr.send();
+    getAll();
+    appendAlert(`Priority updated for Item with ID: ${id}`, "success");
+};
 
 const postTodo = () => {
     const titleInput = document.getElementById("title-input");
     const title = titleInput.value;
     const descInput = document.getElementById("description-input");
     const description = descInput.value;
-	const highPriorityCheckbox = document.getElementById("high-priority");
-	const high_priority = highPriorityCheckbox.checked;
-	const itemTypeSelect = document.getElementById("item-type");
+    const highPriorityCheckbox = document.getElementById("high-priority");
+    const high_priority = highPriorityCheckbox.checked;
+    const itemTypeSelect = document.getElementById("item-type");
     let level = itemTypeSelect.value;
-	const tags = []
-	const completed = false
-	const created_date = new Date()
-	const completed_date = new Date(44, 3, 15)
+    const tags = [];
+    const completed = false;
+    const created_date = new Date();
+    const completed_date = new Date(44, 3, 15);
 
-	if (level == 1) {
-		level = "task";
-	} else if (level == 2) {
-		level = "todo";
-	} else if (level == 3) {
-		level = "gottado";
-	}
+    if (level == 1) {
+        level = "task";
+    } else if (level == 2) {
+        level = "todo";
+    } else if (level == 3) {
+        level = "gottado";
+    }
 
     console.log(title);
     console.log(description);
@@ -64,7 +78,7 @@ const postTodo = () => {
     xhr.onreadystatechange = () => {
         if (xhr.readyState == 4 && xhr.status == 201) {
             getAll();
-			titleInput.value = "";
+            titleInput.value = "";
             descInput.value = "";
             highPriorityCheckbox.checked = false;
             itemTypeSelect.selectedIndex = 0;
@@ -72,9 +86,19 @@ const postTodo = () => {
     };
     xhr.open("POST", `${api}/create`, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(JSON.stringify({ title, description, tags, completed, created_date, completed_date, high_priority, level })); //MUST MATCH ABOVE REFERENCES
-
-
+    xhr.send(
+        JSON.stringify({
+            title,
+            description,
+            tags,
+            completed,
+            created_date,
+            completed_date,
+            high_priority,
+            level,
+        })
+    );
+    appendAlert(`Created ${level}!`, "success"); //MUST MATCH ABOVE REFERENCES
 };
 
 const updateItem = (id) => {
@@ -122,6 +146,7 @@ const updateItem = (id) => {
     descXhr.open("PATCH", `${api}/desc/${id}`, true);
     descXhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     descXhr.send(JSON.stringify(description));
+    appendAlert(`Updated Item with ID: ${id}`, "success");
 };
 
 const displayAll = (all) => {
@@ -137,6 +162,16 @@ const displayAll = (all) => {
     const task_accordion = document.getElementById("task-accordion");
     task_accordion.innerHTML = "";
     const task_items = tasks.map((x) => {
+        const priority = x.high_priority;
+        let logo = "";
+        let logoStyle = "";
+        if (priority == true) {
+            logo = "⭐";
+            logoStyle = "background-color: gold;";
+        } else if (priority == false) {
+            logo = "★";
+        }
+
         return `<div class="accordion-item">
 					<h2 class="accordion-header" id="heading${x.id}">
 						<div class="accordion-button collapsed input-group" 
@@ -164,41 +199,51 @@ const displayAll = (all) => {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-8">
-							</div>
-							<div class="col-4 justify-content-end">
-								<input type="checkbox" class="btn-check" onclick=togglePriority(${x.id}) id="btn-check-${x.id}" autocomplete="off">
-								<label class="btn" for="btn-check-${x.id}">Priority: ${x.high_priority}</label>
-								<a
-									tabindex="0"
-									role="button"
-									class="btn btn-outline-dark popover-dismiss"
-									data-bs-toggle="popover"
-									data-bs-trigger="focus"
-									data-bs-title="Metadata"
-									data-bs-content="Item ID: ${x.id}<br>
-													Creation Date: ${x.created_date}<br>
-													Expiration Date: ${x.expired_date}<br>
-													Completed Date: ${x.completed_date}"
-								>
-									Info
-								</a>
-								<button
-									onclick="updateItem(${x.id})"
-									type="button"
-									id="update-${x.id}"
-									class="btn btn-warning"
-								>
-									Update
-								</button>
-								<button
-									onclick="deleteItem(${x.id})"
-									type="button"
-									id="delete${x.id}"
-									class="btn btn-alert"
-								>
-									🗑️
-								</button>
+							<div class="col-12 d-flex justify-content-end">
+								<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+									<div class="btn-group" role="group" aria-label="Basic outlined example">
+											<input
+												type="checkbox"
+												class="btn-check"
+												onclick="togglePriority(${x.id})"
+												id="btn-check-${x.id}"
+												autocomplete="off"
+											/>
+											<label class="btn btn-outline-primary" style="${logoStyle}" for="btn-check-${x.id}">${logo}</label>
+
+											<button
+												onclick="updateItem(${x.id})"
+												type="button"
+												id="update-${x.id}"
+												class="btn btn-outline-primary"
+											>
+												💾
+											</button>
+											<button
+												onclick="deleteItem(${x.id})"
+												type="button"
+												id="delete${x.id}"
+												class="btn btn-outline-primary"
+											>
+												🗑️
+											</button>
+										</div>
+									</div>
+									<a
+										tabindex="0"
+										role="button"
+										class="btn btn-outline-primary popover-dismiss"
+										data-bs-toggle="popover"
+										data-bs-trigger="focus"
+										data-bs-title="Metadata"
+										data-bs-content="Item ID: ${x.id}<br>
+														Creation Date: ${x.created_date}<br>
+														Expiration Date: ${x.expired_date}<br>
+														Completed Date: ${x.completed_date}"
+									>
+										Info
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -210,6 +255,16 @@ const displayAll = (all) => {
     const todo_accordion = document.getElementById("todo-accordion");
     todo_accordion.innerHTML = "";
     const todo_items = todos.map((x) => {
+        const priority = x.high_priority;
+        let logo = "";
+        let logoStyle = "";
+        if (priority == true) {
+            logo = "⭐";
+            logoStyle = "background-color: gold;";
+        } else if (priority == false) {
+            logo = "★";
+        }
+
         return `<div class="accordion-item">
 					<h2 class="accordion-header" id="heading${x.id}">
 						<div class="accordion-button collapsed input-group" 
@@ -237,41 +292,51 @@ const displayAll = (all) => {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-8">
-							</div>
-							<div class="col-4 justify-content-end">
-								<input type="checkbox" class="btn-check" onclick=togglePriority(${x.id}) id="btn-check-${x.id}" autocomplete="off">
-								<label class="btn" for="btn-check-${x.id}">Priority: ${x.high_priority}</label>
-								<a
-									tabindex="0"
-									role="button"
-									class="btn btn-outline-dark popover-dismiss"
-									data-bs-toggle="popover"
-									data-bs-trigger="focus"
-									data-bs-title="Metadata"
-									data-bs-content="Item ID: ${x.id}<br>
-													Creation Date: ${x.created_date}<br>
-													Expiration Date: ${x.expired_date}<br>
-													Completed Date: ${x.completed_date}"
-								>
-									Info
-								</a>
-								<button
-									onclick="updateItem(${x.id})"
-									type="button"
-									id="update-${x.id}"
-									class="btn btn-warning"
-								>
-									Update
-								</button>
-								<button
-									onclick="deleteItem(${x.id})"
-									type="button"
-									id="delete${x.id}"
-									class="btn btn-alert"
-								>
-									🗑️
-								</button>
+							<div class="col-12 d-flex justify-content-end">
+								<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+									<div class="btn-group" role="group" aria-label="Basic outlined example">
+											<input
+												type="checkbox"
+												class="btn-check"
+												onclick="togglePriority(${x.id})"
+												id="btn-check-${x.id}"
+												autocomplete="off"
+											/>
+											<label class="btn btn-outline-primary" style="${logoStyle}" for="btn-check-${x.id}">${logo}</label>
+
+											<button
+												onclick="updateItem(${x.id})"
+												type="button"
+												id="update-${x.id}"
+												class="btn btn-outline-primary"
+											>
+												💾
+											</button>
+											<button
+												onclick="deleteItem(${x.id})"
+												type="button"
+												id="delete${x.id}"
+												class="btn btn-outline-primary"
+											>
+												🗑️
+											</button>
+										</div>
+									</div>
+									<a
+										tabindex="0"
+										role="button"
+										class="btn btn-outline-primary popover-dismiss"
+										data-bs-toggle="popover"
+										data-bs-trigger="focus"
+										data-bs-title="Metadata"
+										data-bs-content="Item ID: ${x.id}<br>
+														Creation Date: ${x.created_date}<br>
+														Expiration Date: ${x.expired_date}<br>
+														Completed Date: ${x.completed_date}"
+									>
+										Info
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -282,6 +347,16 @@ const displayAll = (all) => {
     const gottado_accordion = document.getElementById("gottado-accordion");
     gottado_accordion.innerHTML = "";
     const gottado_items = gottados.map((x) => {
+        const priority = x.high_priority;
+        let logo = "";
+        let logoStyle = "";
+        if (priority == true) {
+            logo = "⭐";
+            logoStyle = "background-color: gold;";
+        } else if (priority == false) {
+            logo = "★";
+        }
+
         return `<div class="accordion-item">
 					<h2 class="accordion-header" id="heading${x.id}">
 						<div class="accordion-button collapsed input-group" 
@@ -309,41 +384,51 @@ const displayAll = (all) => {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-8">
-							</div>
-							<div class="col-4 justify-content-end">
-								<input type="checkbox" class="btn-check" onclick=togglePriority(${x.id}) id="btn-check-${x.id}" autocomplete="off">
-								<label class="btn" for="btn-check-${x.id}">Priority: ${x.high_priority}</label>
-								<a
-									tabindex="0"
-									role="button"
-									class="btn btn-outline-dark popover-dismiss"
-									data-bs-toggle="popover"
-									data-bs-trigger="focus"
-									data-bs-title="Metadata"
-									data-bs-content="Item ID: ${x.id}<br>
-													Creation Date: ${x.created_date}<br>
-													Expiration Date: ${x.expired_date}<br>
-													Completed Date: ${x.completed_date}"
-								>
-									Info
-								</a>
-								<button
-									onclick="updateItem(${x.id})"
-									type="button"
-									id="update-${x.id}"
-									class="btn btn-warning"
-								>
-									Update
-								</button>
-								<button
-									onclick="deleteItem(${x.id})"
-									type="button"
-									id="delete${x.id}"
-									class="btn btn-alert"
-								>
-									🗑️
-								</button>
+							<div class="col-12 d-flex justify-content-end">
+								<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+									<div class="btn-group" role="group" aria-label="Basic outlined example">
+											<input
+												type="checkbox"
+												class="btn-check"
+												onclick="togglePriority(${x.id})"
+												id="btn-check-${x.id}"
+												autocomplete="off"
+											/>
+											<label class="btn btn-outline-primary" style="${logoStyle}" for="btn-check-${x.id}">${logo}</label>
+
+											<button
+												onclick="updateItem(${x.id})"
+												type="button"
+												id="update-${x.id}"
+												class="btn btn-outline-primary"
+											>
+												💾
+											</button>
+											<button
+												onclick="deleteItem(${x.id})"
+												type="button"
+												id="delete${x.id}"
+												class="btn btn-outline-primary"
+											>
+												🗑️
+											</button>
+										</div>
+									</div>
+									<a
+										tabindex="0"
+										role="button"
+										class="btn btn-outline-primary popover-dismiss"
+										data-bs-toggle="popover"
+										data-bs-trigger="focus"
+										data-bs-title="Metadata"
+										data-bs-content="Item ID: ${x.id}<br>
+														Creation Date: ${x.created_date}<br>
+														Expiration Date: ${x.expired_date}<br>
+														Completed Date: ${x.completed_date}"
+									>
+										Info
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
