@@ -8,7 +8,7 @@ document.getElementById("save").addEventListener("click", (e) => {
     closeBtn.click();
 });
 
-const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
+let alertPlaceholder = document.getElementById("liveAlertPlaceholder");
 const appendAlert = (message, type) => {
     const wrapper = document.createElement("div");
     wrapper.innerHTML = [
@@ -47,6 +47,20 @@ const togglePriority = (id) => {
     xhr.send();
     getAll();
     appendAlert(`Priority updated for Item with ID: ${id}`, "success");
+};
+
+const toggleCompletion = (id) => {
+    console.log(`Updating priority of item with id: ${id}`);
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            getAll();
+        }
+    };
+    xhr.open("PATCH", `${api}/completed/${id}`, true);
+    xhr.send();
+    getAll();
+    appendAlert(`Completed Item with ID: ${id}`, "success");
 };
 
 const postTodo = () => {
@@ -172,6 +186,10 @@ const displayAll = (all) => {
             logo = "★";
         }
 
+        if (x.completed == true) {
+            return "";
+        }
+
         return `<div class="accordion-item">
 					<h2 class="accordion-header" id="heading${x.id}">
 						<div class="accordion-button collapsed input-group" 
@@ -219,6 +237,7 @@ const displayAll = (all) => {
 											>
 												💾
 											</button>
+											<button type="button" onclick="toggleCompletion(${x.id})" class="btn btn-outline-primary">✅</button>
 											<button
 												onclick="deleteItem(${x.id})"
 												type="button"
@@ -265,96 +284,8 @@ const displayAll = (all) => {
             logo = "★";
         }
 
-        return `<div class="accordion-item">
-					<h2 class="accordion-header" id="heading${x.id}">
-						<div class="accordion-button collapsed input-group" 
-									type="button"
-									data-bs-toggle="collapse"
-									data-bs-target="#collapse${x.id}"
-									aria-expanded="false"
-									aria-controls="collapse${x.id}">
-							<input id="title-input-${x.id}" type="text" class="form-control" value="${x.title}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-						</div>
-
-					</h2>
-					<div
-						id="collapse${x.id}"
-						class="accordion-collapse collapse"
-						aria-labelledby="heading${x.id}"
-						data-bs-parent="#todo-accordion"
-					>
-						<div class="row">
-							<div class="col-12">
-								<div class="form-floating">
-									<textarea class="form-control" placeholder="Description" id="description-input-${x.id}" style="height: 100px">${x.description}</textarea>
-									<label for="description${x.id}">Description</label>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-12 d-flex justify-content-end">
-								<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-									<div class="btn-group" role="group" aria-label="Basic outlined example">
-											<input
-												type="checkbox"
-												class="btn-check"
-												onclick="togglePriority(${x.id})"
-												id="btn-check-${x.id}"
-												autocomplete="off"
-											/>
-											<label class="btn btn-outline-primary" style="${logoStyle}" for="btn-check-${x.id}">${logo}</label>
-
-											<button
-												onclick="updateItem(${x.id})"
-												type="button"
-												id="update-${x.id}"
-												class="btn btn-outline-primary"
-											>
-												💾
-											</button>
-											<button
-												onclick="deleteItem(${x.id})"
-												type="button"
-												id="delete${x.id}"
-												class="btn btn-outline-primary"
-											>
-												🗑️
-											</button>
-										</div>
-									</div>
-									<a
-										tabindex="0"
-										role="button"
-										class="btn btn-outline-primary popover-dismiss"
-										data-bs-toggle="popover"
-										data-bs-trigger="focus"
-										data-bs-title="Metadata"
-										data-bs-content="Item ID: ${x.id}<br>
-														Creation Date: ${x.created_date}<br>
-														Expiration Date: ${x.expired_date}<br>
-														Completed Date: ${x.completed_date}"
-									>
-										Info
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>`;
-    });
-    todo_accordion.innerHTML = todo_items.join(" ");
-    //gottado logic
-    const gottado_accordion = document.getElementById("gottado-accordion");
-    gottado_accordion.innerHTML = "";
-    const gottado_items = gottados.map((x) => {
-        const priority = x.high_priority;
-        let logo = "";
-        let logoStyle = "";
-        if (priority == true) {
-            logo = "⭐";
-            logoStyle = "background-color: gold;";
-        } else if (priority == false) {
-            logo = "★";
+        if (x.completed == true) {
+            return "";
         }
 
         return `<div class="accordion-item">
@@ -404,6 +335,104 @@ const displayAll = (all) => {
 											>
 												💾
 											</button>
+											<button type="button" onclick="toggleCompletion(${x.id})" class="btn btn-outline-primary">✅</button>
+											<button
+												onclick="deleteItem(${x.id})"
+												type="button"
+												id="delete${x.id}"
+												class="btn btn-outline-primary"
+											>
+												🗑️
+											</button>
+										</div>
+									</div>
+									<a
+										tabindex="0"
+										role="button"
+										class="btn btn-outline-primary popover-dismiss"
+										data-bs-toggle="popover"
+										data-bs-trigger="focus"
+										data-bs-title="Metadata"
+										data-bs-content="Item ID: ${x.id}<br>
+														Creation Date: ${x.created_date}<br>
+														Expiration Date: ${x.expired_date}<br>
+														Completed Date: ${x.completed_date}"
+									>
+										Info
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>`;
+    });
+    todo_accordion.innerHTML = todo_items.join(" ");
+    //gottado logic
+    const gottado_accordion = document.getElementById("gottado-accordion");
+    gottado_accordion.innerHTML = "";
+    const gottado_items = gottados.map((x) => {
+        const priority = x.high_priority;
+        let logo = "";
+        let logoStyle = "";
+        if (priority == true) {
+            logo = "⭐";
+            logoStyle = "background-color: gold;";
+        } else if (priority == false) {
+            logo = "★";
+        }
+
+        if (x.completed == true) {
+            return "";
+        }
+
+        return `<div class="accordion-item">
+					<h2 class="accordion-header" id="heading${x.id}">
+						<div class="accordion-button collapsed input-group" 
+									type="button"
+									data-bs-toggle="collapse"
+									data-bs-target="#collapse${x.id}"
+									aria-expanded="false"
+									aria-controls="collapse${x.id}">
+							<input id="title-input-${x.id}" type="text" class="form-control" value="${x.title}" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+						</div>
+
+					</h2>
+					<div
+						id="collapse${x.id}"
+						class="accordion-collapse collapse"
+						aria-labelledby="heading${x.id}"
+						data-bs-parent="#todo-accordion"
+					>
+						<div class="row">
+							<div class="col-12">
+								<div class="form-floating">
+									<textarea class="form-control" placeholder="Description" id="description-input-${x.id}" style="height: 100px">${x.description}</textarea>
+									<label for="description${x.id}">Description</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 d-flex justify-content-end">
+								<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+									<div class="btn-group" role="group" aria-label="Basic outlined example">
+											<input
+												type="checkbox"
+												class="btn-check"
+												onclick="togglePriority(${x.id})"
+												id="btn-check-${x.id}"
+												autocomplete="off"
+											/>
+											<label class="btn btn-outline-primary" style="${logoStyle}" for="btn-check-${x.id}">${logo}</label>
+
+											<button
+												onclick="updateItem(${x.id})"
+												type="button"
+												id="update-${x.id}"
+												class="btn btn-outline-primary"
+											>
+												💾
+											</button>
+											<button type="button" onclick="toggleCompletion(${x.id})" class="btn btn-outline-primary">✅</button>
 											<button
 												onclick="deleteItem(${x.id})"
 												type="button"

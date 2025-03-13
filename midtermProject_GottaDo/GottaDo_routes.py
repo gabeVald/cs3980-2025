@@ -211,6 +211,22 @@ async def update_task_priority(id: Annotated[int, Path(ge=0, le=99999)]) -> Task
         status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID={id} not found"
     )
 
+@task_update_router.patch("/completed/{id}", status_code=status.HTTP_202_ACCEPTED)
+async def update_task_completion(id: Annotated[int, Path(ge=0, le=99999)]) -> Task:
+    for type in levels:
+        for i in range(len(all_dict[f"{type}"])):
+            task = all_dict[type][i]
+            if task.id == id:
+                if task.completed == True:
+                    task.completed = False
+                    return task
+                else:
+                    task.completed = True
+                    return task
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID={id} not found"
+    )
 
 @task_update_router.patch("/level/{id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_task_level(
