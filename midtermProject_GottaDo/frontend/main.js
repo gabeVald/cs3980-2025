@@ -1,5 +1,13 @@
 const api = `http://127.0.0.1:8000/tasks`;
 
+document.getElementById("save").addEventListener("click", (e) => {
+        console.log("button pressed");
+        e.preventDefault();
+        postTodo();
+        const closeBtn = document.getElementById("modal-close");
+        closeBtn.click();
+    });
+
 const deleteItem = (id) => {
     console.log(`Deleting item with ID: ${id}`);
     const xhr = new XMLHttpRequest();
@@ -11,6 +19,62 @@ const deleteItem = (id) => {
     };
     xhr.open("DELETE", `${api}/${id}`, true);
     xhr.send();
+};
+
+
+const togglePriority = (id) => {
+	console.log(`Updating priority of item with id: ${id}`);
+	const xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = () => {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			getAll();
+		}
+	}
+	xhr.open("PATCH", `${api}/high_priority/${id}`, true);
+	xhr.send();
+	getAll();
+}
+
+const postTodo = () => {
+    const titleInput = document.getElementById("title-input");
+    const title = titleInput.value;
+    const descInput = document.getElementById("description-input");
+    const description = descInput.value;
+	const highPriorityCheckbox = document.getElementById("high-priority");
+	const high_priority = highPriorityCheckbox.checked;
+	const itemTypeSelect = document.getElementById("item-type");
+    let level = itemTypeSelect.value;
+	const tags = []
+	const completed = false
+	const created_date = new Date()
+	const completed_date = new Date(44, 3, 15)
+
+	if (level == 1) {
+		level = "task";
+	} else if (level == 2) {
+		level = "todo";
+	} else if (level == 3) {
+		level = "gottado";
+	}
+
+    console.log(title);
+    console.log(description);
+
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4 && xhr.status == 201) {
+            getAll();
+			titleInput.value = "";
+            descInput.value = "";
+            highPriorityCheckbox.checked = false;
+            itemTypeSelect.selectedIndex = 0;
+        }
+    };
+    xhr.open("POST", `${api}/create`, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify({ title, description, tags, completed, created_date, completed_date, high_priority, level })); //MUST MATCH ABOVE REFERENCES
+
+
 };
 
 const updateItem = (id) => {
@@ -100,25 +164,11 @@ const displayAll = (all) => {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-10">
-								<button
-									onclick="updateItem(${x.id})"
-									type="button"
-									id="update-${x.id}"
-									class="btn btn-warning"
-								>
-									Update
-								</button>
+							<div class="col-8">
 							</div>
-							<div class="col-2">
-								<button
-									onclick="deleteItem(${x.id})"
-									type="button"
-									id="delete${x.id}"
-									class="btn btn-warning"
-								>
-									🗑️
-								</button>
+							<div class="col-4 justify-content-end">
+								<input type="checkbox" class="btn-check" onclick=togglePriority(${x.id}) id="btn-check-${x.id}" autocomplete="off">
+								<label class="btn" for="btn-check-${x.id}">Priority: ${x.high_priority}</label>
 								<a
 									tabindex="0"
 									role="button"
@@ -133,6 +183,22 @@ const displayAll = (all) => {
 								>
 									Info
 								</a>
+								<button
+									onclick="updateItem(${x.id})"
+									type="button"
+									id="update-${x.id}"
+									class="btn btn-warning"
+								>
+									Update
+								</button>
+								<button
+									onclick="deleteItem(${x.id})"
+									type="button"
+									id="delete${x.id}"
+									class="btn btn-alert"
+								>
+									🗑️
+								</button>
 							</div>
 						</div>
 					</div>
@@ -171,25 +237,11 @@ const displayAll = (all) => {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-10">
-								<button
-									onclick="updateItem(${x.id})"
-									type="button"
-									id="update-${x.id}"
-									class="btn btn-warning"
-								>
-									Update
-								</button>
+							<div class="col-8">
 							</div>
-							<div class="col-2">
-								<button
-									onclick="deleteItem(${x.id})"
-									type="button"
-									id="delete${x.id}"
-									class="btn btn-warning"
-								>
-									🗑️
-								</button>
+							<div class="col-4 justify-content-end">
+								<input type="checkbox" class="btn-check" onclick=togglePriority(${x.id}) id="btn-check-${x.id}" autocomplete="off">
+								<label class="btn" for="btn-check-${x.id}">Priority: ${x.high_priority}</label>
 								<a
 									tabindex="0"
 									role="button"
@@ -204,6 +256,22 @@ const displayAll = (all) => {
 								>
 									Info
 								</a>
+								<button
+									onclick="updateItem(${x.id})"
+									type="button"
+									id="update-${x.id}"
+									class="btn btn-warning"
+								>
+									Update
+								</button>
+								<button
+									onclick="deleteItem(${x.id})"
+									type="button"
+									id="delete${x.id}"
+									class="btn btn-alert"
+								>
+									🗑️
+								</button>
 							</div>
 						</div>
 					</div>
@@ -241,25 +309,11 @@ const displayAll = (all) => {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-10">
-								<button
-									onclick="updateItem(${x.id})"
-									type="button"
-									id="update-${x.id}"
-									class="btn btn-warning"
-								>
-									Update
-								</button>
+							<div class="col-8">
 							</div>
-							<div class="col-2">
-								<button
-									onclick="deleteItem(${x.id})"
-									type="button"
-									id="delete${x.id}"
-									class="btn btn-warning"
-								>
-									🗑️
-								</button>
+							<div class="col-4 justify-content-end">
+								<input type="checkbox" class="btn-check" onclick=togglePriority(${x.id}) id="btn-check-${x.id}" autocomplete="off">
+								<label class="btn" for="btn-check-${x.id}">Priority: ${x.high_priority}</label>
 								<a
 									tabindex="0"
 									role="button"
@@ -274,6 +328,22 @@ const displayAll = (all) => {
 								>
 									Info
 								</a>
+								<button
+									onclick="updateItem(${x.id})"
+									type="button"
+									id="update-${x.id}"
+									class="btn btn-warning"
+								>
+									Update
+								</button>
+								<button
+									onclick="deleteItem(${x.id})"
+									type="button"
+									id="delete${x.id}"
+									class="btn btn-alert"
+								>
+									🗑️
+								</button>
 							</div>
 						</div>
 					</div>
@@ -305,7 +375,6 @@ const getAll = () => {
     xhr.open("GET", `${api}/all`, true);
     xhr.send();
 };
-
 (() => {
     getAll();
 })();

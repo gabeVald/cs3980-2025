@@ -16,7 +16,120 @@
     <body>
         <div class="row">
             <div class="col-1">
-                <p>Placeholder for buttons for sorting</p>
+                <br /><br /><br />
+                <div class="text-end">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="add-button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                    >
+                        +
+                    </button>
+                </div>
+                <div
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1
+                                    class="modal-title fs-5"
+                                    id="exampleModalLabel"
+                                >
+                                    New Item
+                                </h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label
+                                        for="exampleFormControlInput1"
+                                        class="form-label"
+                                        >Title</label
+                                    >
+                                    <input
+                                        class="form-control"
+                                        id="title-input"
+                                        placeholder=""
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label
+                                        for="exampleFormControlTextarea1"
+                                        class="form-label"
+                                        >Description</label
+                                    >
+                                    <textarea
+                                        class="form-control"
+                                        id="description-input"
+                                        rows="3"
+                                    ></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4"></div>
+                                    <div class="col-4">
+                                        <select
+                                            class="form-select"
+                                            id="item-type"
+                                            aria-label="Default select example"
+                                        >
+                                            <option value="1" selected>
+                                                Task
+                                            </option>
+                                            <option value="2">Todo</option>
+                                            <option value="3">Gottado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <div
+                                            class="form-check form-switch form-check-reverse pt-2"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                id="high-priority"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="high-priority"
+                                                id="high-priority-toggle"
+                                                >High Priority</label
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                    id="modal-close"
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    id="save"
+                                >
+                                    Save changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-10">
                 <h1>Tasks</h1>
