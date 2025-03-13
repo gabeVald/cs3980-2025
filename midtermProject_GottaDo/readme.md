@@ -1,112 +1,69 @@
-# 📌 GottaDo: A Flexible To-Do Management App
+# GottaDo App
 
-## 📖 Overview
+A simple web application for managing tasks, todos, and gottados using FastAPI and JavaScript.
 
-GottaDo is a lightweight and intuitive task management web application that allows users to organize their to-dos into three categories based on priority and timeline:
+## Motivation
 
-- **Tasks** – Daily tasks that need immediate attention.
-- **To-Dos** – Short-term tasks (within a week) that are upcoming but not urgent.
-- **GottaDos** – Long-term tasks that should not be forgotten.
-- **History Log** – A record of completed tasks for reference and insights.
+I was motivated to expand on the idea of a personal task application and adapt it to the system I already use day to day. Tasks are to be completed within 24 hours, todos are completed within a week, and gottados are completed within a month. For the final project, in addition to the requirements (such as persistence via a database) I also intend to add other features to serve my real-life use case:
 
-The application is built using **FastAPI** for the backend and **HTML/JavaScript/CSS** for the front end, ensuring a seamless and dynamic user experience.
+-   Calendar Integration
+-   Filtering
+-   Tags/Search by tags
+-   UI for re-assigning 'expired' tasks
+-   Order based on priority/pinning system
+-   Markdown in the descriptions
+-   Integration to IPhone homescreen via shortcuts functionality/sideloaded application
+-   Task revival/task history
+-   Recurring tasks
+    -Overall UI enhancements/drag and drop
 
----
+## Table of Contents:
 
-## ✨ Key Features
+-   ## Image Gallery
 
-### 📂 Task Organization
+    -   Main Overview
+        ![alt text](images/Basic.png)
 
-- Categorize tasks into **Tasks, To-Dos, and GottaDos**.
-- **Drag & Drop** functionality to easily move tasks between categories.
-- **Tagging System** for efficient filtering and searching.
+    -   Create a task
+        ![alt text](images/create_task.png)
 
-### 🔍 Search & Filtering
+    -   Details
+        ![alt text](images/Details.png)
 
-- Search tasks by **title, description, and tags**.
-- Filter tasks by **category, priority, or due date**.
-- Sort tasks based on **urgency and completion status**.
+    -   System alerts user upon state change
+        ![alt text](images/feedback.png)
 
-### ✅ Task Completion & History
+-   ## Backend
+    -   FastAPI server implementing CRUD operations for managing tasks.
+    -   Contains the following files:
+        -   `main.py` - Entry point for the FastAPI server, initializing the application and including routes.
+        -   `GottaDo.py` - Core logic for managing tasks, including data structures and operations.
+        -   `GottaDo_routes.py` - Defines API endpoints for handling tasks and interacting with the frontend.
+-   ## Frontend
+    -   Simple JavaScript and HTML interface for interacting with the backend.
+    -   Contains the following files:
+        -   `index.html` - Main HTML file for displaying the UI and structuring the webpage.
+        -   `main.js` - Handles the logic for interacting with the API, making HTTP requests, and updating the UI dynamically.
+-   ## Features
 
-- **Mark tasks as complete**, which moves them to the History Log.
-- View **previously completed tasks** for reference.
-- Option to **revive completed tasks** and move them back into active categories.
+    -   Create, Read, Update, and Delete (CRUD) operations for managing tasks.
+    -   Categorization of tasks into "Tasks," "Todos," and "Gottados."
+    -   High-priority task toggle.
+    -   Bootstrap-powered responsive UI with modals for task entry.
+    -   Dynamic front-end updates without requiring a full page reload.
 
-### 🔗 Backend & API
-
-- Built with **FastAPI** for efficient handling of CRUD operations.
-- Uses an **in-memory database** (list) for storing tasks.
-- Provides **RESTful API endpoints** for easy front-end integration.
-
-### 🎨 UI & UX Enhancements
-
-- **Simple and intuitive interface** with a clean design.
-- **Color-coded categories** for quick visual organization.
-- **Minimalist progress indicators** to track daily task completion.
-
-### 🚀 Future Enhancements (Planned)
-
-- **Recurring tasks** for repetitive actions.
-- **Reminders & notifications** for upcoming deadlines.
-- **Collaboration features** to share tasks with others.
-
----
-
-## 📂 Project Structure
-
-```
-📦 TaskFlow
-├── backend/             # FastAPI backend
-│   ├── main.py         # Main API entry point
-│   ├── GottaDo_routes.py  # API endpoints for task management
-│   ├── GottaDo.py         # Task model and logic
-├── frontend/            # Frontend assets
-│   ├── index.html      # Main UI
-│   ├── style.css       # Styling
-│   ├── app.js         # Frontend logic
-├── README.md           # Project documentation
-```
-
----
-
-## ⚡ Getting Started
-
-### Prerequisites
-
-- Python 3.11+
-- FastAPI
-- Uvicorn
-
-### Setup & Run Backend
-
-```sh
-# Create a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the FastAPI server
-uvicorn backend.main:app --reload
-```
-
-### Run Frontend
-
-Simply open `frontend/index.html` in a browser.
-
----
-
----
-
-## 📜 License
-
-This project is open-source and available under the MIT License.
-
----
-
-## 📷 Screenshots
-
-(Include relevant screenshots of the app interface here)
-
+-   ## Endpoints
+    -   `GET /all`
+    -   `GET /tasks`
+    -   `GET /todos`
+    -   `GET /gottados`
+    -   `GET /completed`
+    -   `POST /create`
+    -   `DELETE /{id}`
+    -   `PATCH /title/{id}`
+    -   `PATCH /desc/{id}`
+    -   `PATCH /expired_date/{id}`
+    -   `PATCH /completed_date/{id}`
+    -   `PATCH /high_priority/{id}`
+    -   `PATCH /completed/{id}`
+    -   `PATCH /level/{id}`
