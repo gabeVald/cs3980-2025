@@ -1,16 +1,26 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
+import certifi
 
 async def main():
-    client = AsyncIOMotorClient("this is the address of the database when you've made it")
+    # Use certifi for SSL certificate verification
+    client = AsyncIOMotorClient(
+        "mongodb+srv://admin:<guUKMpwHIVaSQg8K>@mongodbassignment.vs3p442.mongodb.net/?retryWrites=true&w=majority&appName=mongoDBAssignment",
+        tlsCAFile=certifi.where()
+    )
 
-    """
-    If you want this to work, the database name needs to be in the connection string: localhost:1923/DEFAULTDBNAME
+    try:
+        # List all databases
+        databases = await client.list_database_names()
+        print("Connected successfully!")
+        print("Available databases:", databases)
 
-    default_database = client.get_default_database()
-    print(default_database)
-    """
-    databases = await client.list_database_names()
-    print(databases)
+    except Exception as e:
+        print("An error occurred:", str(e))
+    
+    finally:
+        # Close the connection
+        client.close()
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
