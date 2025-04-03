@@ -13,12 +13,12 @@ load_dotenv()
 def get_settings():
     return MyConfig()
 
-setting = get_settings()
+settings = get_settings()
 
-print(setting.password)
+print(settings.password)
 
-print(setting.connection_string)
+print(settings.connection_string)
 
-print(setting.max_user)
+print(settings.max_user)
 
-print(setting.max_salary)
+print(settings.max_salary)
