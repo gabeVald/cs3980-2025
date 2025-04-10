@@ -1,6 +1,10 @@
 from datetime import datetime, timedelta, timezone
 import jwt
 from pydantic import BaseModel
+#Follow these naming conventions for token stuff \/
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
 
 
 class TokenData(BaseModel):
@@ -19,7 +23,7 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes
     payload.update({"exp": expire })
     encoded = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return encoded
-
+#Takes token (presumably from the frontend, and reads to our python class TokenData)
 def decode_jwt_token(token: str) -> TokenData|None:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
