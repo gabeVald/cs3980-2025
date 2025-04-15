@@ -1,7 +1,4 @@
 {
-    "cSpell.words": [
-        "duedate",
-        "gottado",
-        "gottados"
-    ]
+    "cSpell.words": ["duedate", "gottado", "gottados"],
+    "python.analysis.extraPaths": ["./classExercises/beanie_demo/models"]
 }

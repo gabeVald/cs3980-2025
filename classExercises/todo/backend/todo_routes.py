@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Path, status
-from todo import Todo, TodoRequest
+from models.todo import Todo, TodoRequest
+#THIS FILE NEEDS TONS OF WORK -- REFER TO MERGE OF THIS AND TODO.PY MOVED TO ROUTERS FOLDER IN CLASS DEMO
 
 max_id: int = 0
 

@@ -1,14 +1,30 @@
+from contextlib import asynccontextmanager
+from functools import lru_cache
 from typing import Annotated
 from fastapi import FastAPI, APIRouter, Path
 from enum import Enum
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from db.db_context import init_database
 from todo_routes import todo_router
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(Title="My todo App")
+#to auto load the database
+@asynccontextmanager
+async def lifespan():
+    #upon startup event
+    print("Application Starts...")
+    await init_database()
+    #on shutdown
+    yield
+    print("Application Shuts down") #not currently implemented
+
+app = FastAPI(Title="Class todo App Demo", version="2.0.0",lifespan=lifespan)
+
+
 
 app.include_router(todo_router, tags=["Todos"], prefix="/todos")
+app.include_router(user_router , tags=["Users"], prefix="/users")
 
 app.add_middleware(CORSMiddleware)
 
@@ -16,10 +32,10 @@ app.add_middleware(CORSMiddleware)
 @app.get("/")
 async def welcome() -> dict:
     """My document summary"""
-    return FileResponse("./frontend/index.html")
+    return FileResponse("../frontend/index.html")
 
 
-app.mount("/", StaticFiles(directory="frontend"), name="assets")
+app.mount("/", StaticFiles(directory="../frontend"), name="assets")
 
 # BELOW THIS IS FROM EARLY DEMOS, COMMENTED OUT
 """
