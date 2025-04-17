@@ -24,7 +24,7 @@ async def get_todos() -> list[Todo]:
     return await Todo.find_all().to_list()
 
 
-@todo_router.get("/{id}")
+@todo_router.get("/{id}") # Look at movies example to see authentication for user specific id
 async def get_todo_by_id(id: int = Path(..., title="default")) -> Todo:
     todo = await Todo.get(id)
     if todo:
