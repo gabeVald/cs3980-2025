@@ -7,10 +7,14 @@ from pydantic import BaseModel
 class Todo(Document):
     id: int
     title: str
-    desc: str
+    description: str
+    
+    class Settings:
+        name = "todos"
+
 
 
 # Used to create todos
 class TodoRequest(BaseModel):
     title: str
-    desc: str
+    description: str

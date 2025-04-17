@@ -17,10 +17,10 @@ document.getElementById("save-new-todo").addEventListener("click", (e) => {
 const postTodo = () => {
     const titleInput = document.getElementById("new-title");
     const title = titleInput.value;
-    const descInput = document.getElementById("new-desc");
-    const desc = descInput.value;
+    const descriptionInput = document.getElementById("new-desc");
+    const description = descriptionInput.value;
     console.log(title);
-    console.log(desc);
+    console.log(description);
 
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
@@ -30,7 +30,7 @@ const postTodo = () => {
     };
     xhr.open("POST", api, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(JSON.stringify({ title, desc })); //MUST MATCH ABOVE REFERENCES
+    xhr.send(JSON.stringify({ title, description })); //MUST MATCH ABOVE REFERENCES
 };
 
 const deleteTodo = (id) => {
@@ -51,10 +51,10 @@ const displayTodos = (todos) => {
     tbody.innerHTML = ""; //Contents of tbody in index.html
     const rows = todos.map((x) => {
         return `<tr>
-                    <td>${x.id}</td>
+                    <td>${x._id}</td>
                     <td>${x.title}</td>
-                    <td>${x.desc}</td>
-                    <td><button onclick="deleteTodo(${x.id})" id='delete-${x.id}' type="button" class="btn btn-danger">Delete</button></td>
+                    <td>${x.description}</td>
+                    <td><button onclick="deleteTodo(${x._id})" id='delete-${x._id}' type="button" class="btn btn-danger">Delete</button></td>
                 </tr>`; //How each row should be mapped from todo x
     });
     tbody.innerHTML = rows.join(" ");
