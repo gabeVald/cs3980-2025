@@ -6,18 +6,22 @@ from enum import Enum
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from db.db_context import init_database
-from todo_routes import todo_router
+
 from fastapi.middleware.cors import CORSMiddleware
+
+from routers.todo import todo_router
+from routers.user import user_router
 
 #to auto load the database
 @asynccontextmanager
-async def lifespan():
+async def lifespan(app: FastAPI):
     #upon startup event
     print("Application Starts...")
     await init_database()
     #on shutdown
     yield
     print("Application Shuts down") #not currently implemented
+
 
 app = FastAPI(Title="Class todo App Demo", version="2.0.0",lifespan=lifespan)
 
